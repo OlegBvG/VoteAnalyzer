@@ -4,9 +4,12 @@ public class DBConnection
 {
     private static Connection connection;
 
-    private static String dbName = "learn";
+//    private static String dbName = "learn";
+//    private static String dbUser = "root";
+//    private static String dbPass = "ya78yrc8n4w3984";
+    private static String dbName = "skillbox";
     private static String dbUser = "root";
-    private static String dbPass = "ya78yrc8n4w3984";
+    private static String dbPass = "123456789";
 
     public static Connection getConnection()
     {
@@ -15,7 +18,7 @@ public class DBConnection
             try {
                 connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/" + dbName +
-                    "?user=" + dbUser + "&password=" + dbPass);
+                    "?user=" + dbUser + "&password=" + dbPass+ "&useSSL=false" + "&useUnicode=true&characterEncoding=UTF-8");
                 connection.createStatement().execute("DROP TABLE IF EXISTS voter_count");
                 connection.createStatement().execute("CREATE TABLE voter_count(" +
                         "id INT NOT NULL AUTO_INCREMENT, " +
