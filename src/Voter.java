@@ -1,3 +1,4 @@
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -5,6 +6,19 @@ public class Voter
 {
     private String name;
     private Date birthDay;
+
+    static String pattern = "yyyy-MM-dd";
+    private static SimpleDateFormat birthDayFormat = new SimpleDateFormat(pattern);
+
+    // Create an instance of SimpleDateFormat used for formatting
+// the string representation of date according to the chosen pattern
+//    DateFormat df = new SimpleDateFormat(pattern);
+
+    // Get the today date using Calendar object.
+//    Date today = Calendar.getInstance().getTime();
+    // Using DateFormat format method we can create a string
+// representation of a date with the defined format.
+//    String todayAsString = df.format(today);
 
     public Voter(String name, Date birthDay)
     {
@@ -43,5 +57,10 @@ public class Voter
     public Date getBirthDay()
     {
         return birthDay;
+    }
+
+    public String getBirthDayString()
+    {
+        return birthDayFormat.format(birthDay);
     }
 }

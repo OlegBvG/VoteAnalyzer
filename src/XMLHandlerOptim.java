@@ -15,13 +15,9 @@ public class XMLHandlerOptim extends DefaultHandler
     private  Voter voter;
     private static SimpleDateFormat birthDayFormat = new SimpleDateFormat("yyyy.MM.dd");
     private ArrayList<String> voterCounts;
-//    private  String voterCountsAr[];
     private long usageMemory2;
-//    private int ind;
     public XMLHandlerOptim() {
         voterCounts = new ArrayList<>();
-//        voterCountsAr = new String[149146];
-//        ind = 0;
 
     }
 
@@ -40,8 +36,6 @@ public class XMLHandlerOptim extends DefaultHandler
             else if (qName.equals("visit") && voter != null)
             {
                voterCounts.add(voter.toString());
-//               voterCountsAr[ind] = voter.toString();
-//               ind++;
                usageMemory2 = Math.max(usageMemory2, (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
 
             }
@@ -79,20 +73,6 @@ public class XMLHandlerOptim extends DefaultHandler
                 votersName = v;
             }
         }
-
-//        Arrays.sort(voterCountsAr);
-//        String v = voterCountsAr[0];
-//        for (int i = 0; i < voterCountsAr.length; i++){
-//            if (v.equals(voterCountsAr[i])){
-//                c++;
-//            } else {
-//                if (c > 1) System.out.println(v + " - " + c);
-//                c = 1;
-//                v = voterCountsAr[i];
-//            }
-//        }
-
-
             usageMemory2 = Math.max(usageMemory2, (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
 
             return usageMemory2;
