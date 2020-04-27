@@ -2,6 +2,8 @@ import java.sql.*;
 
 public class DBConnection {
     private static Connection connection;
+    public static PreparedStatement preparedStatement;
+
 
     //    private static String dbName = "learn";
 //    private static String dbUser = "root";
@@ -18,6 +20,7 @@ public class DBConnection {
                 connection = DriverManager.getConnection(
                         "jdbc:mysql://localhost:3306/" + dbName +
                                 "?user=" + dbUser + "&password=" + dbPass + "&useSSL=false" + "&serverTimezone=UTC" + "&useUnicode=true&characterEncoding=UTF-8");
+//                SET GLOBAL max_allowed_packet=16777216
                 connection.createStatement().execute("DROP TABLE IF EXISTS voter_count");
 
 //                connection.createStatement().execute("CREATE TABLE voter_count(" +
@@ -37,6 +40,9 @@ public class DBConnection {
 //                        "KEY name_date(name(50), birthDate))");
 
                         "PRIMARY KEY(id))");
+
+//                preparedStatement = connection.prepareStatement("INSERT INTO voter_count(name, birthDate, `count`) VALUES  ?");
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -54,6 +60,14 @@ public class DBConnection {
                     "VALUES " + insertQuery ;
 
             DBConnection.getConnection().createStatement().execute(sql);
+
+        }
+
+        public static void executePreparedStatement (String name, String birthDate) throws SQLException {
+
+            preparedStatement.setString(1,  name);
+            preparedStatement.setString(2,  birthDate);
+            int resultSet = preparedStatement.executeUpdate();
 
         }
 

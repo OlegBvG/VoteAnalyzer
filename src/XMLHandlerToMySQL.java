@@ -34,17 +34,25 @@ public class  XMLHandlerToMySQL extends DefaultHandler
         }
         else if (qName.equals("visit") && voter != null)
         {
-            insertQuery.append((insertQuery.length() == 0 ? "":", ") + "('" + voter.getName() + "', '" + voter.getBirthDayString() + "', 1) ");
-
-            if (insertQuery.length() > 3000000) {
-                    try {
-                        DBConnection.executeMultiInsert(insertQuery.toString());
-
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
-                insertQuery.delete(0, (insertQuery.length()));
+// вставка с помощью executePreparedStatement
+            try {
+                DBConnection.executePreparedStatement(voter.getName(), voter.getBirthDayString());
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
+
+// вставка с помощью  executeMultiInsert
+//            insertQuery.append((insertQuery.length() == 0 ? "":", ") + "('" + voter.getName() + "', '" + voter.getBirthDayString() + "', 1) ");
+
+//            if (insertQuery.length() > 3000000) {
+//                    try {
+//                        DBConnection.executeMultiInsert(insertQuery.toString());
+//
+//                    } catch (SQLException throwables) {
+//                        throwables.printStackTrace();
+//                    }
+//                insertQuery.delete(0, (insertQuery.length()));
+//            }
 
         }
 
@@ -61,7 +69,7 @@ public class  XMLHandlerToMySQL extends DefaultHandler
 
     public void printDublicatedVoiters() throws SQLException {
 
-        DBConnection.executeMultiInsert(insertQuery.toString());
+//        DBConnection.executeMultiInsert2(insertQuery.toString());
         //Printing results
         DBConnection.printVoterCounts();
     }

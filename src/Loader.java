@@ -25,10 +25,10 @@ public class Loader {
 
 
     private static StringBuilder insertQuery = new StringBuilder();
-    private int cnt = 0;
-    private int i = 0;
-    private final int THREADS = 4;
-    private ThreadPoolExecutor exec = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS);
+//    private int cnt = 0;
+//    private int i = 0;
+//    private final int THREADS = 4;
+//    private ThreadPoolExecutor exec = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS);
 
 
     public static void main(String[] args) throws Exception {
@@ -51,6 +51,12 @@ public class Loader {
 
     private static void parseXMLHandlerToMySQL(String fileName) throws ParserConfigurationException, SAXException, IOException, SQLException {
         System.out.println("----------------------------------------------------------------------------------");
+//        DBConnection.getConnection();
+        DBConnection.preparedStatement = DBConnection.getConnection().prepareStatement("INSERT INTO voter_count(name, birthDate, `count`) " +
+                "VALUES (?, ?, 1)");
+//        DBConnection.getConnection().createStatement().execute(sql);
+//        DBConnection.preparedStatement = DBConnection.getConnection().prepareStatement("INSERT INTO voter_count(name, birthDate, `count`) " +
+//                "VALUES ?");
         SAXParserFactory factoryToMySQL = SAXParserFactory.newInstance();
         SAXParser parserToMySQL = factoryToMySQL.newSAXParser();
         XMLHandlerToMySQL handlerToMySQL = new XMLHandlerToMySQL();
