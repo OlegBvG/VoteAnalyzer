@@ -1,7 +1,7 @@
 import java.sql.*;
 
 public class DBConnection {
-    private static Connection connection;
+    public static Connection connection;
     public static PreparedStatement preparedStatement;
 
 
@@ -19,7 +19,7 @@ public class DBConnection {
             try {
                 connection = DriverManager.getConnection(
                         "jdbc:mysql://localhost:3306/" + dbName +
-                                "?user=" + dbUser + "&password=" + dbPass + "&useSSL=false" + "&serverTimezone=UTC" + "&useUnicode=true&characterEncoding=UTF-8");
+                                "?user=" + dbUser + "&password=" + dbPass + "&useSSL=false" + "&serverTimezone=UTC" + "&useUnicode=true&characterEncoding=UTF-8" + "&max_allowed_packet=8388608");
 //                SET GLOBAL max_allowed_packet=16777216
                 connection.createStatement().execute("DROP TABLE IF EXISTS voter_count");
 
@@ -35,7 +35,7 @@ public class DBConnection {
                         "id INT NOT NULL AUTO_INCREMENT, " +
                         "name TINYTEXT NOT NULL, " +
                         "birthDate DATE NOT NULL, " +
-                        "`count` INT NOT NULL, " +
+//                        "`count` INT NOT NULL, " +
 //                        "PRIMARY KEY(id), " +
 //                        "KEY name_date(name(50), birthDate))");
 
@@ -56,8 +56,9 @@ public class DBConnection {
 //                "ON DUPLICATE KEY UPDATE count=count + 1";
 
         public static void executeMultiInsert (String insertQuery) throws SQLException {
-            String sql = "INSERT INTO voter_count(name, birthDate, `count`) " +
+            String sql = "INSERT INTO voter_count(name, birthDate) " +
                     "VALUES " + insertQuery ;
+//            String sql = "INSERT INTO voter_count(name, birthDate, `count`) " +
 
             DBConnection.getConnection().createStatement().execute(sql);
 
@@ -101,8 +102,10 @@ public class DBConnection {
 
         public static void printVoterCounts () throws SQLException
         {
-            String sql = "SELECT v.id, v.name, v.birthDate, v.count, count(*) cnt FROM skillbox.voter_count v  group by concat(name, birthDate) having cnt>1 order by name";
-            ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+//            String sql = "SELECT v.id, v.name, v.birthDate, v.count, count(*) cnt FROM skillbox.voter_count v  group by concat(name, birthDate) having cnt>1 order by name";
+            String sql = "SELECT v.id, v.name, v.birthDate, count(*) cnt FROM skillbox.voter_count v  group by concat(name, birthDate) having cnt>1 order by name";
+//            ResultSet rs = DBConnection.getConnection().createStatement().executeQuery(sql);
+            ResultSet rs = DBConnection.connection.createStatement().executeQuery(sql);
             while (rs.next()) {
                 System.out.println("\t" + rs.getString("name") + " (" +
                         rs.getString("birthDate") + ") - " + rs.getInt("cnt"));

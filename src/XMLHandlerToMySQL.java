@@ -12,7 +12,8 @@ public class  XMLHandlerToMySQL extends DefaultHandler
 {
     private  Voter voter;
     private static SimpleDateFormat birthDayFormat = new SimpleDateFormat("yyyy.MM.dd");
-    private StringBuilder insertQuery = new StringBuilder();
+//    private StringBuilder insertQuery = new StringBuilder();
+    private int countVoters = 0;
 
     public XMLHandlerToMySQL() {
 
@@ -34,16 +35,35 @@ public class  XMLHandlerToMySQL extends DefaultHandler
         }
         else if (qName.equals("visit") && voter != null)
         {
-// вставка с помощью executePreparedStatement
+//// вставка с помощью executePreparedStatement
+//            try {
+//                DBConnection.executePreparedStatement(voter.getName(), voter.getBirthDayString());
+//            } catch (SQLException throwables) {
+//                throwables.printStackTrace();
+//            }
+
+
+//мульти вставка с помощью executePreparedStatement
             try {
-                DBConnection.executePreparedStatement(voter.getName(), voter.getBirthDayString());
+                DBConnection.preparedStatement.setString(1,  voter.getName());
+                DBConnection.preparedStatement.setString(2,  voter.getBirthDayString());
+                DBConnection.preparedStatement.addBatch();
+                countVoters++;
+
+                if (countVoters > 10000) {
+                    DBConnection.preparedStatement.executeBatch();
+                    DBConnection.connection.commit();
+                    countVoters = 0;
+                }
+
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
 
 // вставка с помощью  executeMultiInsert
 //            insertQuery.append((insertQuery.length() == 0 ? "":", ") + "('" + voter.getName() + "', '" + voter.getBirthDayString() + "', 1) ");
-
+//            insertQuery.append((insertQuery.length() == 0 ? "":", ") + "('" + voter.getName() + "', '" + voter.getBirthDayString() + "') ");
+//
 //            if (insertQuery.length() > 3000000) {
 //                    try {
 //                        DBConnection.executeMultiInsert(insertQuery.toString());
@@ -69,7 +89,10 @@ public class  XMLHandlerToMySQL extends DefaultHandler
 
     public void printDublicatedVoiters() throws SQLException {
 
-//        DBConnection.executeMultiInsert2(insertQuery.toString());
+//        DBConnection.executeMultiInsert(insertQuery.toString());
+        DBConnection.preparedStatement.executeBatch();
+        DBConnection.connection.commit();
+
         //Printing results
         DBConnection.printVoterCounts();
     }

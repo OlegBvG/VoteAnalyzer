@@ -8,7 +8,9 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,12 +53,20 @@ public class Loader {
 
     private static void parseXMLHandlerToMySQL(String fileName) throws ParserConfigurationException, SAXException, IOException, SQLException {
         System.out.println("----------------------------------------------------------------------------------");
-//        DBConnection.getConnection();
-        DBConnection.preparedStatement = DBConnection.getConnection().prepareStatement("INSERT INTO voter_count(name, birthDate, `count`) " +
-                "VALUES (?, ?, 1)");
+        // для preparedStatement
+        DBConnection.connection = DBConnection.getConnection();
+        DBConnection.connection.setAutoCommit(false);
+//        Statement stmt = DBConnection.connection.createStatement();
+
+//        DBConnection.preparedStatement = DBConnection.getConnection().prepareStatement("INSERT INTO voter_count(name, birthDate, `count`) " +
+        DBConnection.preparedStatement = DBConnection.getConnection().prepareStatement("INSERT INTO voter_count(name, birthDate) " +
+                "VALUES (?, ?)");
+
+
 //        DBConnection.getConnection().createStatement().execute(sql);
 //        DBConnection.preparedStatement = DBConnection.getConnection().prepareStatement("INSERT INTO voter_count(name, birthDate, `count`) " +
 //                "VALUES ?");
+
         SAXParserFactory factoryToMySQL = SAXParserFactory.newInstance();
         SAXParser parserToMySQL = factoryToMySQL.newSAXParser();
         XMLHandlerToMySQL handlerToMySQL = new XMLHandlerToMySQL();
